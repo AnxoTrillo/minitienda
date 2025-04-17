@@ -10,14 +10,15 @@
         <servlet-class>minitienda.ver_carro</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>ver_caja</servlet-name>
-        <servlet-class>minitienda.ver_caja</servlet-class>
-    </servlet>
 
     <servlet>
         <servlet-name>pagar</servlet-name>
         <servlet-class>minitienda.pagar</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>confirmarCompra</servlet-name>
+        <servlet-class>minitienda.confirmarCompra</servlet-class>
     </servlet>
 
 
@@ -31,13 +32,14 @@
         <url-pattern>/ver_carro</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>ver_caja</servlet-name>
-        <url-pattern>/ver_caja</url-pattern>
-    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>pagar</servlet-name>
         <url-pattern>/pagar</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>confirmarCompra</servlet-name>
+        <url-pattern>/confirmarCompra</url-pattern>
     </servlet-mapping>
 </web-app>

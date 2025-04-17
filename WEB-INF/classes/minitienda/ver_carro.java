@@ -55,7 +55,7 @@ public class ver_carro extends HttpServlet {
             out.println("<a href=\"index.html\"><img src=\"/minitienda/imagenes/carrito_compra.gif\" alt=\"Seguir comprando\"></a><figcaption><a href=\"index.html\">Seguir comprando</a></figcaption></figure>");
 
             out.println("<figure style=\"text-align: center; margin-left: 20px;\">");
-            out.println("<a href=\"ver_caja\"><img src=\"/minitienda/imagenes/pago_importe2.jpg\" alt=\"Me largo a pagar\"></a><figcaption><a href=\"ver_caja\">Me largo a pagar</a></figcaption></figure>");
+            out.println("<a href=\"pagar\"><img src=\"/minitienda/imagenes/pago_importe2.jpg\" alt=\"Me largo a pagar\"></a><figcaption><a href=\"pagar\">Me largo a pagar</a></figcaption></figure>");
         }
 
         else {
@@ -65,9 +65,6 @@ public class ver_carro extends HttpServlet {
             out.println("<p>Para agregar productos, visite la <a href=\"index.html\">Tienda</a>.</p>");
             out.println("</center>");
         }
-
-
-
 
         out.println("</div></body></html>");
     }
@@ -92,7 +89,6 @@ public class ver_carro extends HttpServlet {
             session.setAttribute("carrito", carrito);
 
             response.sendRedirect("ver_carro");
-            return;
         }
     }
 }
