@@ -28,7 +28,7 @@ public class anhadir_cd extends HttpServlet {
 
       // se mete la cadena seleccionada en una variable
       String descripcionCD = request.getParameter("CD");
-      String cantidad = Integer.parseInt(request.getParameter("cantidad"));
+      Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
 
       HashMap<String, Integer> carrito = (HashMap<String, Integer>)session.getAttribute("carrito");
       if (carrito == null )

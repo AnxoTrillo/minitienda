@@ -26,32 +26,31 @@ public class ver_carro extends HttpServlet {
             for (int i = 0; i < carrito.size(); i++) {
                 String item = keys[i];
                 int cantidad = carrito.get(item);
-                StringTokenizer t = new StringTokenizer(descripcionCD,"|");
+                StringTokenizer t = new StringTokenizer(item,"|");
                 t.nextToken();
                 t.nextToken();
                 t.nextToken();
-                precioString = t.nextToken();
+                String precioString = t.nextToken();
                 precioString = precioString.replace('$',' ').trim();
 
                 float precio = Float.parseFloat(precioString);
                 float importe = precio * cantidad;
                 total += importe;
 
-                out.println("<tr><td>" + descripcionCD + "</th><td>" + cantidad + "</td><td style=\"width: 100px;\">" + importe + " euros</td><td style=\"width: 80px;\">")
+                out.println("<tr><td>" + item + "</th><td>" + cantidad + "</td><td style=\"width: 100px;\">" + importe + " euros</td><td style=\"width: 80px;\">");
                 out.println("<form action=\"ver_carro\" method=\"POST\">");
-                out.println("<input type=\"hidden\" name=\"descripcionCD\" value=\"" + descripcionCD +"\">");
+                out.println("<input type=\"hidden\" name=\"descripcionCD\" value=\"" + item +"\">");
                 out.println("<input type=\"submit\" value=\"Eliminar\"></form>");
                 out.println("</th></tr>");
             }
-
             // Importe final
             out.println("<tr><td></td>");
-            out.println("<td>IMPORTE TOTAL</td><td>" + total + " euros</td><td></td></tr></table>")
+            out.println("<td>IMPORTE TOTAL</td><td>" + total + " euros</td><td></td></tr></table>");
         }
 
         else {
             out.println("<h2>Carrito de Compras Vacio</h2>");
-            out.prinltn("<p>No hay productos en el carrito de compras.</p>");
+            out.println("<p>No hay productos en el carrito de compras.</p>");
             out.println("<p>Para agregar productos, visite la <a href=\"index.html\">Tienda</a>.</p>");
         }
 
