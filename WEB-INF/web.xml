@@ -1,20 +1,43 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!DOCTYPE web-app
-PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-"http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
-
 <web-app>
+    <servlet>
+        <servlet-name>anhadir_cd</servlet-name>
+        <servlet-class>minitienda.anhadir_cd</servlet-class>
+    </servlet>
 
-<servlet>
-<servlet-name>SumaNumeros</servlet-name>
-<servlet-class>supercalculadora.SumaNumeros</servlet-class>
-</servlet>
+    <servlet>
+        <servlet-name>ver_carro</servlet-name>
+        <servlet-class>minitienda.ver_carro</servlet-class>
+    </servlet>
 
- <servlet-mapping>
- <servlet-name>SumaNumeros</servlet-name>
- <url-pattern>/SumaNumeros</url-pattern>
- </servlet-mapping>
+    <servlet>
+        <servlet-name>ver_caja</servlet-name>
+        <servlet-class>minitienda.ver_caja</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>pagar</servlet-name>
+        <servlet-class>minitienda.pagar</servlet-class>
+    </servlet>
 
 
+    <servlet-mapping>
+        <servlet-name>anhadir_cd</servlet-name>
+        <url-pattern>/anhadir_cd</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ver_carro</servlet-name>
+        <url-pattern>/ver_carro</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ver_caja</servlet-name>
+        <url-pattern>/ver_caja</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>pagar</servlet-name>
+        <url-pattern>/pagar</url-pattern>
+    </servlet-mapping>
 </web-app>
