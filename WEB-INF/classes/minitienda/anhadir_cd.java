@@ -19,7 +19,7 @@ public class anhadir_cd extends HttpServlet {
     // Variables privadas a la instancia del Servlet
     private int sumaInstanciaServlet = 0;
 
-  public void doGet(HttpServletRequest request,
+  public void doPost(HttpServletRequest request,
                     HttpServletResponse response)
       throws ServletException, IOException {
       
