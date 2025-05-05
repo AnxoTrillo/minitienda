@@ -9,7 +9,7 @@ public class confirmarCompra extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             HttpSession session = request.getSession(true);
             HashMap<String, Integer> carrito = new HashMap<String, Integer>();
-            session.setAttribute("carrito", carrito);
+            session.invalidate();
 
             response.sendRedirect("index.html");
     }
