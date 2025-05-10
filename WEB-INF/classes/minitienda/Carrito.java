@@ -5,25 +5,28 @@ import java.util.StringTokenizer;
 import java.io.Serializable;
 
 public class Carrito implements Serializable{
-    private HashMap<String,Integer> ListaCD; //guarda el nombre del disco y la cantidad de ese mismo disco
+    private HashMap<String,Integer> listaCD; //guarda el nombre del disco y la cantidad de ese mismo disco
     private float totalAmount; //guarda el precio total del carro
 
     //constructor
     public Carrito(){
-        this.ListaCD=new HashMap<String,Integer>();
+        this.listaCD=new HashMap<String,Integer>();
         this.totalAmount=0f;
     }
 
     //añade amount CDs y acctualiza el precio total
     public void addCD(String CD, Integer amount){
-        Integer prevamount=this.ListaCD.get(CD);
-        this.ListaCD.put(CD, prevamount+amount);
+        Integer prevamount=this.listaCD.get(CD);
+        if (prevamount != null) {
+            this.listaCD.put(CD, prevamount+amount);
+        } else
+            this.listaCD.put(CD, amount);
         totalAmount+=(getPrecio(CD)*amount);
     }
 
     //getter de la lista
     public HashMap<String,Integer> getListaCD(){
-        return this.ListaCD;
+        return this.listaCD;
     }
 
     //recoge el precio dado un titulo de cd
@@ -43,20 +46,20 @@ public class Carrito implements Serializable{
         //PRIMERO SE REDUCE EN UNO LA CANTIDAD DE CDS QUE SE TIENE DE UN TIPO
         Integer amount=getListaCD().get(CD);
         if(amount>1){
-            this.ListaCD.put(CD, amount-1);
+            this.listaCD.put(CD, amount-1);
         }else{
-            this.ListaCD.remove(CD);
+            this.listaCD.remove(CD);
         }
         //LUEGO SE REDUCE EL PRECIO TOTAL
         this.totalAmount-=getPrecio(CD);
     }
 
     //setter de la lista, tb actualiza la amount
-    public void setListaCD(HashMap<String,Integer> listacd){
-        this.ListaCD = listacd;
+    public void setlistaCD(HashMap<String,Integer> listacd){
+        this.listaCD = listacd;
         float auxamount  = 0;
-        for (String nombre : this.ListaCD.keySet()) {
-            auxamount+=(this.ListaCD.get(nombre)*getPrecio(nombre));
+        for (String nombre : this.listaCD.keySet()) {
+            auxamount+=(this.listaCD.get(nombre)*getPrecio(nombre));
         }
         setTotalAmount(auxamount);
     }
@@ -72,7 +75,7 @@ public class Carrito implements Serializable{
     }
 
     public void clearList(){
-        this.ListaCD=new HashMap<String, Integer>();
+        this.listaCD=new HashMap<String, Integer>();
         this.totalAmount=0f;
     }
 

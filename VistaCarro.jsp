@@ -1,10 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.StringTokenizer"%>
-<%@page session="true" %>
-<%@page isELIgnored=“false”  %> 
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page session="true"%>
+<%@page isELIgnored="false"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="minitienda.*"%>
 
 <html>
@@ -16,7 +17,7 @@
 
 
 <body bgcolor="#FDF5E6">
-    <c:if test="${not empty sessionScope.carrito.listaCDs}">
+    <c:if test="${not empty sessionScope.carrito.listaCD}">
         <c:set var="carrito" value="${sessionScope.carrito}"/>
 
         <h1 align="center">Carrito de Compras</h2>
@@ -30,15 +31,14 @@
 
             <c:set var="total" value="${carrito.totalAmount}" />
 
-            <c:forEach items="${carrito.ListaCD.keySet}" var="CDActual">
-
+            <c:forEach items="${carrito.listaCD}" var="CDActual">
                 <tr>
-                    <td><c:out value="${CDActual}"/></td>
-                    <td><c:out value="${carrito.ListaCD.CDActual}"/></td>
-                    <td style="width: 100px;"><c:out value="${carrito.getPrecio(CDActual)}"/> euros</td>
+                    <td><c:out value="${CDActual.key}"/></td>
+                    <td><c:out value="${CDActual.value}"/></td>
+                    <td style="width: 100px;"><c:out value="${carrito.getPrecio(CDActual.key)}"/> euros</td>
                     <td style="width: 80px;">
                         <form action="ver_carro" method="POST">
-                            <input type="hidden" name="descripcionCD" value= "<%= item %>">
+                            <input type="hidden" name="descripcionCD" value= "<c:out value='${CDActual.key}'/>"">
                             <input type="submit" value="Eliminar">
                         </form>
                     </td>
@@ -49,7 +49,7 @@
             <tr>
                 <td></td>
                 <td>IMPORTE TOTAL</td>
-                <td><c:out value="${total}"/> euros</td>
+                <td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${total}"/> euros</td>
                 <td></td>
             </tr>
         </table>
@@ -65,7 +65,7 @@
             </figure>
     
     </c:if>
-    <c:if test="${empty sessionScope.carrito.listaCDs}">
+    <c:if test="${empty sessionScope.carrito.listaCD}">
 
         <center>
             <h2>Carrito de Compras Vacio</h2>
