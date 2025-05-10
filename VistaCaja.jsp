@@ -15,7 +15,7 @@
 <body bgcolor="#FDF5E6">
     <h1 align="center">Caja</h2>
 
-    <c:if test="${not empty sessionScope.carrito.listaCDs}">
+    <c:if test="${not empty sessionScope.carrito.listaCD}">
         <c:set var="carrito" value="${sessionScope.carrito}"/>
         <c:set var="total" value="${carrito.totalAmount}"/>
 

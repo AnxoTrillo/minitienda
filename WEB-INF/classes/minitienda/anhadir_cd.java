@@ -1,41 +1,42 @@
 package minitienda;
+
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import minitienda.*;
+
 
 public class anhadir_cd extends HttpServlet {
 
-    private int sumaInstanciaServlet = 0;
+    public void doGet(HttpServletRequest request,
+                       HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
 
-  public void doPost(HttpServletRequest request,
-                    HttpServletResponse response)
-      throws ServletException, IOException {
 
-      HttpSession session = request.getSession(true);
+    public void doPost(HttpServletRequest request,
+                       HttpServletResponse response)
+            throws ServletException, IOException {
 
-      String descripcionCD = request.getParameter("CD");
-      Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
+        HttpSession session = request.getSession(true);
 
-      HashMap<String, Integer> carrito = (HashMap<String, Integer>)session.getAttribute("carrito");
-      if (carrito == null )
-	  {
-	      System.out.println("Carrito es null");
-	      carrito = new HashMap<>();
-	      session.setAttribute("carrito", carrito);
-	  }
+        String descripcionCD = request.getParameter("CD");
+        Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
 
-      
-      if(carrito.containsKey(descripcionCD)){
-        Integer temp = carrito.get(descripcionCD);
-        carrito.put(descripcionCD, temp+cantidad);
-      }else{
-        carrito.put(descripcionCD, cantidad);
-      }
+        Carrito carrito = (Carrito) session.getAttribute("carrito");
+        if (carrito == null) {
+            System.out.println("Carrito es null");
+            carrito = new Carrito();
+            session.setAttribute("carrito", carrito);
+        }
 
-      session.setAttribute("carrito", carrito);
+        carrito.addCD(descripcionCD, cantidad);
 
-      response.sendRedirect("index.html");
-  }
+        session.setAttribute("carrito", carrito);
+
+        response.sendRedirect("index.html");
+    }
 }
