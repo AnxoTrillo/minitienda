@@ -22,9 +22,7 @@ public class ver_carro extends HttpServlet {
 
                 if (cantidad <= 1) {
                     carrito.remove(descripcionCD);
-                }
-
-                else {
+                } else {
                     cantidad = cantidad - 1;
                     carrito.put(descripcionCD, cantidad);
                 }
@@ -32,14 +30,13 @@ public class ver_carro extends HttpServlet {
             }
 
 
-
             gotoPage("/VistaCarro.jsp", request, response);
         }
     }
 
     private void gotoPage(String address, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	// Creamos objeto RequestDispatcher
-    		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(address);
-    		dispatcher.forward(request, response);
-        }
+        // Creamos objeto RequestDispatcher
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(address);
+        dispatcher.forward(request, response);
+    }
 }

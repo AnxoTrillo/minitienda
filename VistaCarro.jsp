@@ -11,7 +11,7 @@
     <% HashMap<String, Integer> carrito = (HashMap<String, Integer>) session.getAttribute("carrito");
         if (carrito != null && carrito.size() > 0) {
     %>
-    <h2 align="center">Carrito de Compras</h2>
+    <h1 align="center">Carrito de Compras</h2>
     <table align="center" border="1" width="100%" style="background-color: #ffffff;">
         <tr>
             <th>Titulo del CD</th>
@@ -58,11 +58,11 @@
 
     <div style="display: flex; justify-content: center;">
         <figure style="text-align: center; margin-right: 20px;">
-            <a href="index.html"><img src="imagenes/carrito_compra.gif" alt="Seguir comprando"></a>
+            <a href="index.html"><img src="imagenes/carrito_compra.gif" alt="Seguir comprando" style="height:150px;"></a>
             <figcaption><a href="index.html">Seguir comprando</a></figcaption>
         </figure>
-        <figure style="text-align: center; margin-left: 20px;">
-            <a href="pagar"><img src="imagenes/pago_importe2.jpg" alt="Me largo a pagar"></a>
+        <figure style="text-align: center; margin-left: 20px; ">
+            <a href="pagar"><img src="imagenes/pago_importe2.jpg" alt="Me largo a pagar" style="height: 150px;"></a>
             <figcaption><a href="pagar">Me largo a pagar</a></figcaption>
         </figure>
     <% }
