@@ -6,66 +6,90 @@ import java.io.Serializable;
 public class Disco implements Serializable{
     private String titulo;
     private String autor;
-    private String lugar;
-    private Float precio;
+    private String pais;
+    private float precio;
     private String descripcion;
 
-    //constructor
+    //Constructores
     public Disco(){
-        this.titulo=new String();
-        this.autor=new String();
-        this.lugar=new String();
-        this.descripcion=new String();
-        this.precio=0f;
+        this.titulo = new String();
+        this.autor = new String();
+        this.pais = new String();
+        this.descripcion = new String();
+        this.precio = 0f;
     }
 
     //constructor con argumento de entrada
     public Disco(String entrada){
-        this.descripcion=entrada;
+        this.descripcion = entrada;
         StringTokenizer t = new StringTokenizer(entrada,"|");
-        this.titulo=t.nextToken();
-        this.autor=t.nextToken();
-        this.lugar=t.nextToken();
-        this.precio=Float.parseFloat(t.nextToken().replace('$',' ').trim());
+        this.titulo = t.nextToken();
+        this.autor = t.nextToken();
+        this.pais = t.nextToken();
+        this.precio = Float.parseFloat(t.nextToken().replace('$',' ').trim());
     }
 
-    //getters
+
+    //Getters
     public String getTitulo(){
         return this.titulo;
     }
+
     public String getAutor(){
         return this.autor;
     }
-    public String getLugar(){
-        return this.lugar;
+
+    public String getPais(){
+        return this.pais;
     }
-    public String getDescripcion(){
-        return this.descripcion;
-    }
+
     public Float getPrecio(){
         return this.precio;
     }
 
-    //setters
+    public String getDescripcion(){
+        return this.descripcion;
+    }
+
+
+    //Setters
     public void setTitulo(String entrada){
-        this.titulo=entrada;
+        this.titulo = entrada;
     }
+
     public void setAutor(String entrada){
-        this.autor=entrada;
+        this.autor = entrada;
     }
-    public void setLugar(String entrada){
-        this.lugar=entrada;
+
+    public void setPais(String entrada){
+        this.pais = entrada;
     }
+
+    public void setPrecio(float entrada){
+        this.precio = entrada;
+    }
+
     public void setDescripcion(String entrada){
-        this.descripcion=entrada;
+        this.descripcion = entrada;
         StringTokenizer t = new StringTokenizer(entrada,"|");
-        this.titulo=t.nextToken();
-        this.autor=t.nextToken();
-        this.lugar=t.nextToken();
-        this.precio=Float.parseFloat(t.nextToken().replace('$',' ').trim());
+        this.titulo = t.nextToken().trim();
+        this.autor = t.nextToken().trim();
+        this.pais = t.nextToken().trim();
+        this.precio = Float.parseFloat(t.nextToken().replace('$',' ').trim());
     }
-    public void setPrecio(Float entrada){
-        this.precio=entrada;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Disco other = (Disco) obj;
+        return this.descripcion.equals(other.descripcion);
     }
+
+    @Override
+    public int hashCode() {
+        return this.descripcion.hashCode();
+    }
+
 
 }

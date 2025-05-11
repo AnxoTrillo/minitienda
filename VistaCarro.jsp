@@ -33,13 +33,13 @@
 
             <c:forEach items="${carrito.listaCD}" var="CDActual">
                 <tr>
-                    <td><c:out value="${CDActual.key}"/></td>
+                    <td><c:out value="${CDActual.key.descripcion}"/></td>
                     <td><c:out value="${CDActual.value}"/></td>
-                    <td style="width: 100px;"><c:out value="${carrito.getPrecio(CDActual.key)}"/> euros</td>
+                    <td style="width: 100px;"><c:out value="${CDActual.key.precio}"/> euros</td>
                     <td style="width: 80px;">
                         <form action="ver_carro" method="POST">
-                            <input type="hidden" name="descripcionCD" value= "<c:out value='${CDActual.key}'/>"">
-                            <input type="submit" value="Eliminar">
+                            <input type="hidden" name="descripcionCD" value="${CDActual.key.descripcion}">
+                            <input type="submit" name="eliminar" value="Eliminar">
                         </form>
                     </td>
                 </tr>

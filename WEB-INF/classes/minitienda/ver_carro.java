@@ -15,13 +15,16 @@ public class ver_carro extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String descripcionCD = request.getParameter("descripcionCD");
-        System.out.println(descripcionCD);
         if (descripcionCD != null) {
             HttpSession session = request.getSession(true);
             Carrito carrito = (Carrito) session.getAttribute("carrito");
-            if (carrito != null && carrito.getListaCD().get(descripcionCD) != null) {
-                carrito.deleteCD(descripcionCD);
-                session.setAttribute("carrito", carrito);
+            if (carrito != null) {
+                for (Disco cd : carrito.getListaCD().keySet()) {
+                    if (cd.getDescripcion().equals(descripcionCD)) {
+                        carrito.deleteCD(descripcionCD);
+                        session.setAttribute("carrito", carrito);
+                    }
+                }
             }
             gotoPage("/VistaCarro.jsp", request, response);
         }

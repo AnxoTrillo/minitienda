@@ -3,9 +3,10 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.StringTokenizer"%>
 <%@page import="minitienda.*"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page isELIgnored=“false”  %> 
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@page isELIgnored="false"%>
 
 
 <html>
@@ -24,7 +25,7 @@
                 <th>TOTAL A PAGAR</th>
             </tr>
             <tr>
-                <td><c:out value="${total}"/> euros</td>
+                <td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${total}"/> euros</td>
             </tr>
         </table>
 
