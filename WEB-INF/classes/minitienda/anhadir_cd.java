@@ -5,8 +5,6 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import minitienda.*;
-
 
 public class anhadir_cd extends HttpServlet {
 
@@ -24,6 +22,7 @@ public class anhadir_cd extends HttpServlet {
         HttpSession session = request.getSession(true);
 
         String descripcionCD = request.getParameter("CD");
+        Disco disco = new Disco(descripcionCD);
         Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
 
         Carrito carrito = (Carrito) session.getAttribute("carrito");
@@ -33,7 +32,7 @@ public class anhadir_cd extends HttpServlet {
             session.setAttribute("carrito", carrito);
         }
 
-        carrito.addCD(descripcionCD, cantidad);
+        carrito.addCD(disco, cantidad);
 
         session.setAttribute("carrito", carrito);
 
