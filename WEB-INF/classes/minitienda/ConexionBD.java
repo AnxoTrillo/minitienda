@@ -1,12 +1,23 @@
 package minitienda;
 
+import java.sql.Statement;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexionBD {
+
+protected void registrarLog(String mensaje) {
+    try (FileWriter fw = new FileWriter("C:\\Users\\Anxo\\Documents\\GREI\\CUARTO\\DAW\\minitienda\\WEB-INF\\classes\\minitienda\\outputs.txt", true);
+         PrintWriter pw = new PrintWriter(fw)) {
+        pw.println(mensaje);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
     public ConexionBD(){
-        ;
     }
 
     protected void testDriver() throws Exception {
@@ -25,9 +36,11 @@ public class ConexionBD {
         try {
             Connection con = DriverManager.getConnection(url);
             System.out.println("Conexión establecida con " + url + "...");
+            registrarLog("Conexión establecida con " + url + "...");
             return con;
         } catch (SQLException e) {
             System.out.println("Error al obtener la conexión a la base de datos: " + e);
+            registrarLog("Error al obtener la conexión a la base de datos: " + e);
             throw e;
         }
     }
@@ -52,8 +65,13 @@ public class ConexionBD {
             )
         """;
 
+        String testing="""
+                insert into usuarios(correo,password,tipo_tarjeta,numero_tarjeta) values('test@test.com','test','visa','1234567890');
+                """;
+
         stmt.execute(usuarios);
         stmt.execute(pedidos);
+        stmt.execute(testing);
 
         System.out.println("Tablas creadas correctamente.");
         stmt.close();
