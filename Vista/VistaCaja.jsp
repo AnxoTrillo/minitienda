@@ -3,7 +3,6 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.StringTokenizer"%>
 <%@page import="minitienda.*"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@page isELIgnored="false"%>
@@ -30,8 +29,8 @@
         </table>
 
         <figure style="text-align: center; margin-right: 20px;">
-            <a href="confirmarCompra"><img src="/minitienda/imagenes/musica.gif" alt="Pagar y volver a la página principal" style="height:150px;"></a>
-            <figcaption><a href="confirmarCompra">Pagar y volver a la pagina principal</a></figcaption>
+            <a href="Controlador?accion=pay"><img src="/minitienda/imagenes/musica.gif" alt="Pagar y volver a la página principal" style="height:150px;"></a>
+            <figcaption><a href="Controlador?accion=pay">Pagar y volver a la pagina principal</a></figcaption>
         </figure>
     </c:if>
 </body>

@@ -3,7 +3,6 @@
 <%@page import="java.util.StringTokenizer"%>
 <%@page session="true"%>
 <%@page isELIgnored="false"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="minitienda.*"%>
@@ -37,7 +36,7 @@
                     <td><c:out value="${CDActual.value}"/></td>
                     <td style="width: 100px;"><c:out value="${CDActual.key.precio}"/> euros</td>
                     <td style="width: 80px;">
-                        <form action="ver_carro" method="POST">
+                        <form action="Controlador?accion=deleteCD" method="POST">
                             <input type="hidden" name="descripcionCD" value="${CDActual.key.descripcion}">
                             <input type="submit" name="eliminar" value="Eliminar">
                         </form>
@@ -60,8 +59,8 @@
                 <figcaption><a href="index.html">Seguir comprando</a></figcaption>
             </figure>
             <figure style="text-align: center; margin-left: 20px; ">
-                <a href="pagar"><img src="imagenes/pago_importe2.jpg" alt="Me largo a pagar" style="height: 150px;"></a>
-                <figcaption><a href="pagar">Me largo a pagar</a></figcaption>
+                <a href="Controlador?accion=checkout"><img src="imagenes/pago_importe2.jpg" alt="Me largo a pagar" style="height: 150px;"></a>
+                <figcaption><a href="Controlador?accion=checkout">Me largo a pagar</a></figcaption>
             </figure>
     
     </c:if>
