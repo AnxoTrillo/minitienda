@@ -4,8 +4,25 @@ import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Controlador extends HttpServlet {
+    ConexionBD con = new ConexionBD();
+
+    public void init() throws ServletException {
+        super.init();
+        try{
+            con.testDriver();
+            Connection connect = con.obtenerConexion("localhost", "minitienda");
+        }
+        catch(Exception e){
+            System.out.println("Error al obtener la conexion a la base de datos: " + e);
+        }
+
+    }
+
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
