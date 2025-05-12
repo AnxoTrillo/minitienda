@@ -3,6 +3,7 @@ package minitienda;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class ConexionBD {
     public ConexionBD(){
@@ -35,22 +36,18 @@ public class ConexionBD {
     protected void crearTablas(Connection con) throws SQLException {
         Statement stmt = con.createStatement();
 
-        String usuarios = """
-            CREATE TABLE IF NOT EXISTS usuarios (
-                correo VARCHAR(100) PRIMARY KEY,
-                password VARCHAR(100) NOT NULL,
-                tipo_tarjeta VARCHAR(100),
-                numero_tarjeta VARCHAR(100)
-            )
-        """;
+        String usuarios = "CREATE TABLE IF NOT EXISTS usuarios ("
+                + "correo VARCHAR(100) PRIMARY KEY, "
+                + "password VARCHAR(100) NOT NULL, "
+                + "tipo_tarjeta VARCHAR(100), "
+                + "numero_tarjeta VARCHAR(100)"
+                + ");";
 
-        String pedidos = """
-            CREATE TABLE IF NOT EXISTS pedidos (
-                id SERIAL PRIMARY KEY,
-                usuario VARCHAR(100) REFERENCES usuarios(correo),
-                importe NUMERIC(10,2)
-            )
-        """;
+
+        String pedidos = "CREATE TABLE IF NOT EXISTS pedidos ("
+                + "id SERIAL PRIMARY KEY, "
+                + "usuario VARCHAR(100) REFERENCES usuarios(correo), "
+                + "importe NUMERIC(10,2))";
 
         stmt.execute(usuarios);
         stmt.execute(pedidos);
