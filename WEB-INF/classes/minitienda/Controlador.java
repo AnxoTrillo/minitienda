@@ -15,6 +15,7 @@ public class Controlador extends HttpServlet {
         try{
             con.testDriver();
             Connection connect = con.obtenerConexion("localhost", "minitienda");
+            con.crearTablas(connect);
         }
         catch(Exception e){
             System.out.println("Error al obtener la conexion a la base de datos: " + e);
