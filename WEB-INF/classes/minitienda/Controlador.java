@@ -7,23 +7,10 @@ import javax.servlet.http.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import minitienda.ConexionBD;
+
 public class Controlador extends HttpServlet {
-    ConexionBD con = new ConexionBD();
-
-    public void init() throws ServletException {
-        super.init();
-        try{
-            con.testDriver();
-            Connection connect = con.obtenerConexion("localhost", "minitienda");
-            con.crearTablas(connect);
-        }
-        catch(Exception e){
-            System.out.println("Error al obtener la conexion a la base de datos: " + e);
-        }
-
-    }
-
-
+    ConexionBD conexion = new ConexionBD();
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
@@ -63,11 +50,41 @@ public class Controlador extends HttpServlet {
                 break;
 
             case "pay":
-                if (carrito != null)
-                    carrito.clearList();
-                else
-                    carrito = new Carrito();
-                gotoPage("/index.html", request, response);
+                gotoPage("/Vista/VistaLogin.jsp", request, response);
+                break;
+
+            case "login":
+                String correo = request.getParameter("correo");
+                String password = request.getParameter("password");
+
+                try {
+                    conexion.testDriver();
+                    Connection con = conexion.obtenerConexion("localhost", "minitienda");
+                    conexion.iniciarSesion(con, correo, password, request, response);
+                }
+                catch (Exception e){
+                    throw new ServletException("Error al procesar el login", e);
+                }
+                break;
+
+            case "toSignin":
+                gotoPage("/Vista/VistaRegistro.jsp", request, response);
+                break;
+
+            case "signin":
+                String correo2 = request.getParameter("correo");
+                String password2 = request.getParameter("password");
+                String tipo = request.getParameter("tipo_tarjeta");
+                String numero = request.getParameter("numero_tarjeta");
+
+                try {
+                    conexion.testDriver();
+                    Connection con = conexion.obtenerConexion("localhost", "minitienda");
+                    conexion.registrarUsuario(con, correo2, password2, tipo, numero, request, response);
+                }
+                catch (Exception e){
+                    throw new ServletException("Error al registrar el usuario", e);
+                }
                 break;
 
             default:
