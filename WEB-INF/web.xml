@@ -1,45 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <web-app>
     <servlet>
-        <servlet-name>anhadir_cd</servlet-name>
-        <servlet-class>minitienda.anhadir_cd</servlet-class>
+        <servlet-name>Controlador</servlet-name>
+        <servlet-class>minitienda.Controlador</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>ver_carro</servlet-name>
-        <servlet-class>minitienda.ver_carro</servlet-class>
-    </servlet>
-
-
-    <servlet>
-        <servlet-name>pagar</servlet-name>
-        <servlet-class>minitienda.pagar</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>confirmarCompra</servlet-name>
-        <servlet-class>minitienda.confirmarCompra</servlet-class>
-    </servlet>
-
-
     <servlet-mapping>
-        <servlet-name>anhadir_cd</servlet-name>
-        <url-pattern>/anhadir_cd</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ver_carro</servlet-name>
-        <url-pattern>/ver_carro</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet-mapping>
-        <servlet-name>pagar</servlet-name>
-        <url-pattern>/pagar</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>confirmarCompra</servlet-name>
-        <url-pattern>/confirmarCompra</url-pattern>
+        <servlet-name>Controlador</servlet-name>
+        <url-pattern>/Controlador</url-pattern>
     </servlet-mapping>
 </web-app>
