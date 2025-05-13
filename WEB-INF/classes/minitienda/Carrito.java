@@ -83,7 +83,7 @@ public class Carrito implements Serializable {
 
 
     public void clearList() {
-        this.listaCD = new HashMap<Disco, Integer>();
+        this.listaCD.clear();
         this.totalAmount = 0f;
     }
 }

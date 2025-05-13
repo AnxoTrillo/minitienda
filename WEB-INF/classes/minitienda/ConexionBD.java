@@ -1,13 +1,8 @@
 package minitienda;
 
 import java.sql.*;
-import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import javax.servlet.ServletException;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 public class ConexionBD {
@@ -15,11 +10,11 @@ public class ConexionBD {
 
     protected void testDriver() throws Exception {
         try {
-            Class.forName ( "org.postgresql.Driver" );
-            System.out.println ( "Encontrado el driver de PostgreSQL" );
-        }catch (java.lang.ClassNotFoundException e) {
+            Class.forName("org.postgresql.Driver");
+            System.out.println("Encontrado el driver de PostgreSQL");
+        } catch (ClassNotFoundException e) {
             System.out.println("PostgreSQL JDBC Driver no encontrado ... ");
-            throw (e);
+            throw e;
         }
     }
 
@@ -56,7 +51,7 @@ public class ConexionBD {
         stmt.close();
     }
 
-    protected void iniciarSesion(Connection con, String correo, String password, HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    public boolean iniciarSesion(Connection con, String correo, String password, HttpServletRequest request) throws SQLException {
         String sql = "SELECT * FROM usuarios WHERE correo = ? AND password = ?";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setString(1, correo);
@@ -65,25 +60,23 @@ public class ConexionBD {
 
         if (rs.next()) {
             request.getSession().setAttribute("usuario", correo);
-            response.sendRedirect("/index.html");
-        }
-        else {
+            return true;
+        } else {
             request.setAttribute("error", "Correo o contraseña incorrectos.");
-            request.getRequestDispatcher("/Vista/VistaLogin.jsp").forward(request, response);
+            return false;
         }
     }
 
-    protected void registrarUsuario(Connection con, String correo, String password, String tipo, String numero, HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+    public boolean registrarUsuario(Connection con, String correo, String password, String tipo, String numero, HttpServletRequest request) throws SQLException {
         String comprobar = "SELECT correo FROM usuarios WHERE correo = ?";
         PreparedStatement check = con.prepareStatement(comprobar);
         check.setString(1, correo);
         ResultSet rs = check.executeQuery();
 
-        if (rs.next()){
+        if (rs.next()) {
             request.setAttribute("error", "El correo ya está registrado.");
-            request.getRequestDispatcher("/Vista/VistaRegistro.jsp").forward(request, response);
-        }
-        else {
+            return false;
+        } else {
             String insertar = "INSERT INTO usuarios (correo, password, tipo_tarjeta, numero_tarjeta) VALUES (?, ?, ?, ?)";
             PreparedStatement insert = con.prepareStatement(insertar);
             insert.setString(1, correo);
@@ -93,7 +86,37 @@ public class ConexionBD {
             insert.executeUpdate();
 
             request.getSession().setAttribute("usuario", correo);
-            response.sendRedirect("index.html");
+            return true;
         }
+    }
+
+    public void guardarPedido(Connection con, String correo, float importe) throws SQLException {
+        String insertar = "INSERT INTO pedidos (usuario, importe) VALUES (?, ?)";
+        PreparedStatement ps = con.prepareStatement(insertar);
+        ps.setString(1, correo);
+        ps.setFloat(2, importe);
+        ps.executeUpdate();
+    }
+
+    public HashMap<String, Object> obtenerUltimoPedido(Connection con, String correo) {
+        HashMap<String, Object> pedido = new HashMap<>();
+        try {
+            String query = "SELECT * FROM pedidos WHERE correo = ? ORDER BY id DESC LIMIT 1";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, correo);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                pedido.put("id", rs.getInt("id"));
+                pedido.put("usuario", rs.getString("usuario"));
+                pedido.put("total", rs.getFloat("importe"));
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pedido;
     }
 }

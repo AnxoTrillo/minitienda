@@ -7,10 +7,24 @@ import javax.servlet.http.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import minitienda.ConexionBD;
-
 public class Controlador extends HttpServlet {
-    ConexionBD conexion = new ConexionBD();
+    private ConexionBD conexionBD;
+    private Connection conexion;
+
+    @Override
+    public void init() throws ServletException {
+        conexionBD = new ConexionBD();
+    }
+
+    private Connection getConexion() throws Exception {
+        if (conexion == null || conexion.isClosed()) {
+            conexionBD.testDriver();
+            conexion = conexionBD.obtenerConexion("localhost", "minitienda");
+            conexionBD.crearTablas(conexion);
+        }
+        return conexion;
+    }
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
@@ -26,70 +40,84 @@ public class Controlador extends HttpServlet {
 
         String accion = request.getParameter("accion");
 
-        switch (accion) {
-            case "addCD":
-                String descripcionCD = request.getParameter("CD");
-                Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
-                carrito.addCD(descripcionCD, cantidad);
-                session.setAttribute("carrito", carrito);
-                gotoPage("/index.html", request, response);
-                break;
+        try {
+            switch (accion) {
+                case "addCD":
+                    String descripcionCD = request.getParameter("CD");
+                    Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
+                    carrito.addCD(descripcionCD, cantidad);
+                    session.setAttribute("carrito", carrito);
+                    gotoPage("/index.html", request, response);
+                    break;
 
-            case "deleteCD":
-                String descripcionCD1 = request.getParameter("descripcionCD");
-                carrito.deleteCD(descripcionCD1);
-                gotoPage("/Vista/VistaCarro.jsp", request, response);
-                break;
+                case "deleteCD":
+                    String descripcionCD1 = request.getParameter("descripcionCD");
+                    carrito.deleteCD(descripcionCD1);
+                    gotoPage("/Vista/VistaCarro.jsp", request, response);
+                    break;
 
-            case "cart":
-                gotoPage("/Vista/VistaCarro.jsp", request, response);
-                break;
+                case "cart":
+                    gotoPage("/Vista/VistaCarro.jsp", request, response);
+                    break;
 
-            case "checkout":
-                gotoPage("/Vista/VistaCaja.jsp", request, response);
-                break;
+                case "checkout":
+                    gotoPage("/Vista/VistaCaja.jsp", request, response);
+                    break;
 
-            case "pay":
-                gotoPage("/Vista/VistaLogin.jsp", request, response);
-                break;
+                case "pay":
+                case "toLogin":
+                    gotoPage("/Vista/VistaLogin.jsp", request, response);
+                    break;
 
-            case "login":
-                String correo = request.getParameter("correo");
-                String password = request.getParameter("password");
+                case "toSignin":
+                    gotoPage("/Vista/VistaRegistro.jsp", request, response);
+                    break;
 
-                try {
-                    conexion.testDriver();
-                    Connection con = conexion.obtenerConexion("localhost", "minitienda");
-                    conexion.iniciarSesion(con, correo, password, request, response);
-                }
-                catch (Exception e){
-                    throw new ServletException("Error al procesar el login", e);
-                }
-                break;
+                case "confirmarCompra":
+                    String correo = request.getParameter("correo");
+                    String password = request.getParameter("password");
+                    String tipo = request.getParameter("tipo_tarjeta");
+                    String numero = request.getParameter("numero_tarjeta");
 
-            case "toSignin":
-                gotoPage("/Vista/VistaRegistro.jsp", request, response);
-                break;
+                    Connection con = getConexion();
+                    boolean loginCorrecto = false;
 
-            case "signin":
-                String correo2 = request.getParameter("correo");
-                String password2 = request.getParameter("password");
-                String tipo = request.getParameter("tipo_tarjeta");
-                String numero = request.getParameter("numero_tarjeta");
+                    if (tipo != null && numero != null) {
+                        loginCorrecto = conexionBD.registrarUsuario(con, correo, password, tipo, numero, request);
+                    } else {
+                        loginCorrecto = conexionBD.iniciarSesion(con, correo, password, request);
+                    }
 
-                try {
-                    conexion.testDriver();
-                    Connection con = conexion.obtenerConexion("localhost", "minitienda");
-                    conexion.registrarUsuario(con, correo2, password2, tipo, numero, request, response);
-                }
-                catch (Exception e){
-                    throw new ServletException("Error al registrar el usuario", e);
-                }
-                break;
+                    if (loginCorrecto) {
+                        session.setAttribute("usuario", correo);
+                        carrito = (Carrito) session.getAttribute("carrito");
 
-            default:
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                return;
+                        if (carrito != null && !carrito.getListaCD().isEmpty()) {
+                            float total = carrito.getTotalAmount();
+                            conexionBD.guardarPedido(con, correo, total);
+                            carrito.clearList();
+                            session.setAttribute("carrito", carrito);
+
+                            // Obtener el último pedido
+                            HashMap<String, Object> ultimoPedido = conexionBD.obtenerUltimoPedido(con, correo);
+
+                            request.setAttribute("pedido", ultimoPedido);
+
+                            gotoPage("/Vista/VistaPedido.jsp", request, response);
+                        } else {
+                            response.sendRedirect("index.html");
+                        }
+                    } else {
+                        request.getRequestDispatcher("/Vista/VistaLogin.jsp").forward(request, response);
+                    }
+                    break;
+
+
+                default:
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            throw new ServletException("Error en el controlador: " + e.getMessage(), e);
         }
     }
 

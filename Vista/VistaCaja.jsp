@@ -29,8 +29,8 @@
         </table>
 
         <figure style="text-align: center; margin-right: 20px;">
-            <a href="Controlador?accion=pay"><img src="/minitienda/imagenes/musica.gif" alt="Pagar y volver a la página principal" style="height:150px;"></a>
-            <figcaption><a href="Controlador?accion=pay">Pagar y volver a la pagina principal</a></figcaption>
+            <a href="Controlador?accion=confirmarCompra"><img src="/minitienda/imagenes/musica.gif" alt="Pagar y volver a la página principal" style="height:150px;"></a>
+            <figcaption><a href="Controlador?accion=confirmarCompra">Pagar y volver a la pagina principal</a></figcaption>
         </figure>
     </c:if>
 </body>
