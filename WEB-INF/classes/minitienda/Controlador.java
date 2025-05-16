@@ -74,6 +74,7 @@ public class Controlador extends HttpServlet {
                     break;
 
                 case "confirmarCompra":
+
                     String correo = request.getParameter("correo");
                     String password = request.getParameter("password");
                     String tipo = request.getParameter("tipo_tarjeta");
@@ -81,27 +82,28 @@ public class Controlador extends HttpServlet {
 
                     Connection con = getConexion();
                     boolean loginCorrecto = false;
-
+                    Usuario user=new Usuario();
                     if (tipo != null && numero != null) {
-                        loginCorrecto = conexionBD.registrarUsuario(con, correo, password, tipo, numero, request);
+                        user=new Usuario(correo, password, tipo, numero);
+                        loginCorrecto = conexionBD.registrarUsuario(con, user, request);
                     } else {
                         loginCorrecto = conexionBD.iniciarSesion(con, correo, password, request);
                     }
 
                     if (loginCorrecto) {
-                        session.setAttribute("usuario", correo);
+                        user    = (Usuario) session.getAttribute("usuario");
                         carrito = (Carrito) session.getAttribute("carrito");
 
                         if (carrito != null && !carrito.getListaCD().isEmpty()) {
                             float total = carrito.getTotalAmount();
-                            conexionBD.guardarPedido(con, correo, total);
+                            conexionBD.guardarPedido(con, user, total);
                             carrito.clearList();
                             session.setAttribute("carrito", carrito);
 
                             // Obtener el último pedido
-                            HashMap<String, Object> ultimoPedido = conexionBD.obtenerUltimoPedido(con, correo);
+                            Pedido ultimoPedido = conexionBD.obtenerUltimoPedido(con, user);
 
-                            request.setAttribute("pedido", ultimoPedido);
+                            session.setAttribute("pedido", ultimoPedido);
 
                             gotoPage("/Vista/VistaPedido.jsp", request, response);
                         } else {

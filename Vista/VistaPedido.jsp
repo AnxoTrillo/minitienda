@@ -12,7 +12,7 @@
 <body bgcolor="#FDF5E6">
     <h1 align="center">Pedido Confirmado</h1>
 
-    <c:if test="${not empty requestScope.pedido}">
+    <c:if test="${not empty sessionScope.pedido}">
         <table align="center" border="1" style="background-color: #ffffff; margin-top: 20px;">
             <tr>
                 <th colspan="2">Detalles del Pedido</th>
@@ -23,7 +23,7 @@
             </tr>
             <tr>
                 <td><strong>Usuario</strong></td>
-                <td>${pedido.usuario}</td>
+                <td>${pedido.user}</td>
             </tr>
             <tr>
                 <td><strong>Total</strong></td>
@@ -32,6 +32,9 @@
                 </td>
             </tr>
         </table>
+    </c:if>
+    <c:if test="${empty sessionScope.pedido}">
+    <h1>ERROR: NO SE RECIBE PEDIDO</h1>
     </c:if>
 
     <figure style="text-align: center; margin-top: 30px;">

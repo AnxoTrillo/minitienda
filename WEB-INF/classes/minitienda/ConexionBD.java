@@ -1,5 +1,9 @@
 package minitienda;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +63,13 @@ public class ConexionBD {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-            request.getSession().setAttribute("usuario", correo);
+            Usuario user = new Usuario();
+            user.setCorreo(rs.getString("correo"));
+            user.setPassword(rs.getString("password"));
+            user.setTipo_tarjeta(rs.getString("tipo_tarjeta"));
+            user.setNumero_tarjeta(rs.getString("numero_tarjeta"));
+
+            request.getSession().setAttribute("usuario", user);
             return true;
         } else {
             request.setAttribute("error", "Correo o contraseña incorrectos.");
@@ -67,10 +77,10 @@ public class ConexionBD {
         }
     }
 
-    public boolean registrarUsuario(Connection con, String correo, String password, String tipo, String numero, HttpServletRequest request) throws SQLException {
+    public boolean registrarUsuario(Connection con, Usuario user, HttpServletRequest request) throws SQLException {
         String comprobar = "SELECT correo FROM usuarios WHERE correo = ?";
         PreparedStatement check = con.prepareStatement(comprobar);
-        check.setString(1, correo);
+        check.setString(1, user.getCorreo());
         ResultSet rs = check.executeQuery();
 
         if (rs.next()) {
@@ -79,37 +89,39 @@ public class ConexionBD {
         } else {
             String insertar = "INSERT INTO usuarios (correo, password, tipo_tarjeta, numero_tarjeta) VALUES (?, ?, ?, ?)";
             PreparedStatement insert = con.prepareStatement(insertar);
-            insert.setString(1, correo);
-            insert.setString(2, password);
-            insert.setString(3, tipo);
-            insert.setString(4, numero);
+            insert.setString(1, user.getCorreo());
+            insert.setString(2, user.getPassword());
+            insert.setString(3, user.getTipo_tarjeta());
+            insert.setString(4, user.getNumero_tarjeta());
             insert.executeUpdate();
 
-            request.getSession().setAttribute("usuario", correo);
+            request.getSession().setAttribute("usuario", user);
             return true;
         }
     }
 
-    public void guardarPedido(Connection con, String correo, float importe) throws SQLException {
+    public void guardarPedido(Connection con, Usuario user, float importe) throws SQLException {
         String insertar = "INSERT INTO pedidos (usuario, importe) VALUES (?, ?)";
         PreparedStatement ps = con.prepareStatement(insertar);
-        ps.setString(1, correo);
+        ps.setString(1, user.getCorreo());
         ps.setFloat(2, importe);
         ps.executeUpdate();
     }
 
-    public HashMap<String, Object> obtenerUltimoPedido(Connection con, String correo) {
-        HashMap<String, Object> pedido = new HashMap<>();
+    public Pedido obtenerUltimoPedido(Connection con, Usuario user) {
+        Pedido pedido = new Pedido();
+        //HashMap<String, Object> pedido = new HashMap<>();
         try {
-            String query = "SELECT * FROM pedidos WHERE correo = ? ORDER BY id DESC LIMIT 1";
+            String query = "SELECT * FROM pedidos WHERE usuario = ? ORDER BY id DESC LIMIT 1";
             PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, correo);
+            ps.setString(1, user.getCorreo());
             ResultSet rs = ps.executeQuery();
-
+            escribirEnArchivo("query");
+            escribirEnArchivo(ps.toString());
             if (rs.next()) {
-                pedido.put("id", rs.getInt("id"));
-                pedido.put("usuario", rs.getString("usuario"));
-                pedido.put("total", rs.getFloat("importe"));
+                pedido.setId(rs.getInt("id"));
+                pedido.setTotal(rs.getFloat("importe"));
+                pedido.setUser(rs.getString("usuario"));
             }
 
             rs.close();
@@ -118,5 +130,26 @@ public class ConexionBD {
             e.printStackTrace();
         }
         return pedido;
+    }
+
+
+    public static void escribirEnArchivo(String texto) {
+        String nombreArchivo = "test_mostaza.txt";
+        File archivo = new File(nombreArchivo);
+
+        try {
+            if (!archivo.exists()) {
+                archivo.createNewFile();
+                System.out.println("Archivo creado: " + nombreArchivo);
+            }
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo, true))) {
+                writer.write(texto);
+                writer.newLine();
+                System.out.println("Texto escrito en el archivo " + nombreArchivo);
+            }
+        } catch (IOException e) {
+            System.out.println("Ocurrió un error al escribir en el archivo: " + e.getMessage());
+        }
     }
 }
