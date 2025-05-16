@@ -13,7 +13,7 @@
         <title>Caja</title>
     </head>
 <body bgcolor="#FDF5E6">
-    <h1 align="center">Caja</h2>
+    <h1 align="center">Caja</h1>
 
     <c:if test="${not empty sessionScope.carrito.listaCD}">
         <c:set var="carrito" value="${sessionScope.carrito}"/>

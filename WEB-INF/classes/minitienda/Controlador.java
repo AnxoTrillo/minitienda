@@ -6,10 +6,17 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.Connection;
 import java.sql.SQLException;
+import minitienda.helpers.*;
 
 public class Controlador extends HttpServlet {
     private ConexionBD conexionBD;
     private Connection conexion;
+
+
+    private HelperAddCD h1 = new HelperAddCD();
+    private HelperDeleteCD h2 = new HelperDeleteCD();
+    private HelperConfirmarCompra h3 = new HelperConfirmarCompra();
+
 
     @Override
     public void init() throws ServletException {
@@ -39,21 +46,18 @@ public class Controlador extends HttpServlet {
         }
 
         String accion = request.getParameter("accion");
+        String url = "";
 
         try {
             switch (accion) {
                 case "addCD":
-                    String descripcionCD = request.getParameter("CD");
-                    Integer cantidad = Integer.parseInt(request.getParameter("cantidad"));
-                    carrito.addCD(descripcionCD, cantidad);
-                    session.setAttribute("carrito", carrito);
-                    gotoPage("/index.html", request, response);
+                    url = h1.anhadirProducto(request);
+                    gotoPage(url, request, response);
                     break;
 
                 case "deleteCD":
-                    String descripcionCD1 = request.getParameter("descripcionCD");
-                    carrito.deleteCD(descripcionCD1);
-                    gotoPage("/Vista/VistaCarro.jsp", request, response);
+                    url = h2.eliminarCD(request);
+                    gotoPage(url, request, response);
                     break;
 
                 case "cart":
@@ -74,46 +78,10 @@ public class Controlador extends HttpServlet {
                     break;
 
                 case "confirmarCompra":
-
-                    String correo = request.getParameter("correo");
-                    String password = request.getParameter("password");
-                    String tipo = request.getParameter("tipo_tarjeta");
-                    String numero = request.getParameter("numero_tarjeta");
-
-                    Connection con = getConexion();
-                    boolean loginCorrecto = false;
+                    Connection con = getConexion();                    
                     Usuario user=new Usuario();
-                    if (tipo != null && numero != null) {
-                        user=new Usuario(correo, password, tipo, numero);
-                        loginCorrecto = conexionBD.registrarUsuario(con, user, request);
-                    } else {
-                        loginCorrecto = conexionBD.iniciarSesion(con, correo, password, request);
-                    }
-
-                    if (loginCorrecto) {
-                        user    = (Usuario) session.getAttribute("usuario");
-                        carrito = (Carrito) session.getAttribute("carrito");
-
-                        if (carrito != null && !carrito.getListaCD().isEmpty()) {
-                            float total = carrito.getTotalAmount();
-                            conexionBD.guardarPedido(con, user, total);
-                            carrito.clearList();
-                            session.setAttribute("carrito", carrito);
-
-                            // Obtener el último pedido
-                            Pedido ultimoPedido = conexionBD.obtenerUltimoPedido(con, user);
-
-                            session.setAttribute("pedido", ultimoPedido);
-
-                            gotoPage("/Vista/VistaPedido.jsp", request, response);
-                        } else {
-                            response.sendRedirect("index.html");
-                        }
-                    } else {
-                        request.getRequestDispatcher("/Vista/VistaLogin.jsp").forward(request, response);
-                    }
+                    url = h3.confirmarCompra(request, conexionBD, con, user);
                     break;
-
 
                 default:
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST);
